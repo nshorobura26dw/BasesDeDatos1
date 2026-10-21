@@ -147,11 +147,9 @@ where oficina in (select oficina
 #3
 select nuemp, nombre
 from empleados
-where nuemp in (select id_director
-						from directores
-                        where id_director in (select director
-												from oficinas
-                                                where director != 108));
+where oficina in (select oficina
+					from oficinas
+					where director not like 108);
 
 #4
 select num_nomina
@@ -163,23 +161,21 @@ where id_empleado in (select nuemp
 #5
 select idfab, idproducto, descripcion
 from productos
-where (idfab, idproducto) in (select idfab, idproducto
+where (idfab, idproducto) in (select idfab, idproducto #Tienen que ir en el mismo orden
 							from pedidos
                             where importe < 25000);
                             
 #6
-select numclie, nombre
+select *
 from clientes
-where gestor in (select id_representante
-					from representantes
-                    where id_representante in (select nuemp
-												from empleados
-                                                where nuemp in (select idemp
-																from pedidos
-                                                                where importe < 3000)));
+where numclie in (select idcliente
+					from pedidos
+                    where importe < 3000 and idemp in (select nuemp
+														from empleados
+                                                        where nombre = 'Juan Rovira'));
 
 #7
-select oficina
+select *
 from oficinas
 where oficina in (select oficina
 					from empleados
@@ -188,10 +184,25 @@ where oficina in (select oficina
                                     where ventas > (objetivo * 0.55)));
 
 #8
-select num_nomina
+select *
 from nominas
 where id_empleado in (select nuemp
 						from empleados
                         where oficina in (select oficina
 											from oficinas
                                             where region = 'oeste'));
+
+#9
+select count(nuemp), oficina
+from empleados
+group by oficina;
+
+#10
+select e.nuemp, e.nombre, p.importe, c.numclie
+from empleados e
+inner join pedidos p
+on p.idemp = e.nuemp
+inner join clientes c
+on c.numclie = p.idcliente;
+
+#11
