@@ -214,18 +214,47 @@ on p.idfab = f.idfab
 group by f.idfab;
 
 #12
-select e.nuemp as 'Número de empleado', avg(p.importe) as 'Importe medio de pedidos'
-from empleados e
-inner join pedidos p
-on e.nuemp = p.idemp
-where p.importe > 30000
-group by e.nuemp;
+select idemp as 'Número de empleado', avg(importe) as 'Importe medio de pedidos'
+from pedidos
+group by idemp
+having sum(importe) > 30000;
 
 #13
 select pr.idproducto as 'Producto', pr.descripcion as 'Descripción', pr.precio as 'Precio', pr.existencias as 'Existencias', sum(pe.cantidad) as 'Cantidad'
 from productos pr
 inner join pedidos pe
 on pe.idfab = pr.idfab and pe.idproducto = pr.idproducto
-where sum(pe.cantidad) > (sum(pr.existencias) * 0.75)
-order by sum(pe.cantidad) asc
-group by pr.idproducto;
+group by pr.idproducto, pr.descripcion, pr.precio, pr.existencias
+having sum(pe.cantidad) > (pr.existencias * 0.75)
+order by sum(pe.cantidad) asc;
+
+#14
+select c.numclie as 'Cliente', c.limitecredito - sum(pe.importe) as 'Dinero que le queda'
+from clientes c
+inner join pedidos pe
+on pe.idcliente = c.numclie
+group by numclie;
+
+#15
+update productos pr
+set existencias = existencias - (select sum(cantidad) 
+					from pedidos pe
+                    where pr.idfab = pe.idfab and pr.idproducto = pe.idproducto);
+
+#16
+delete from nuevaempleados
+where edad > 50 and nuemp in (select idemp
+								from pedidos
+                                group by idemp
+                                having sum(cantidad) < 20);
+
+#19
+update nuevaempleados
+set nominas = nominas + 100
+where nombre = 'Antonio Viguer';
+
+#20
+delete from nuevaempleados
+where edad > 60 and trabajador in (select oficina
+								from oficinas
+                                where region = 'oeste');
