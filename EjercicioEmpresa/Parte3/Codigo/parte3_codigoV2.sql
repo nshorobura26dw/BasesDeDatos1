@@ -193,16 +193,39 @@ where id_empleado in (select nuemp
                                             where region = 'oeste'));
 
 #9
-select count(nuemp), oficina
+select count(nuemp) as 'Número de empleados', oficina
 from empleados
 group by oficina;
 
 #10
-select e.nuemp, e.nombre, p.importe, c.numclie
+select e.nuemp, e.nombre, sum(p.importe) as 'Importe', c.numclie
 from empleados e
 inner join pedidos p
 on p.idemp = e.nuemp
 inner join clientes c
-on c.numclie = p.idcliente;
+on c.numclie = p.idcliente
+group by e.nuemp, c.numclie;
 
 #11
+select count(p.idproducto) as 'Cantidad de productos', avg(p.precio) as 'Precio medio', f.idfab as 'Fabricante'
+from productos p
+inner join fabricantes f
+on p.idfab = f.idfab
+group by f.idfab;
+
+#12
+select e.nuemp as 'Número de empleado', avg(p.importe) as 'Importe medio de pedidos'
+from empleados e
+inner join pedidos p
+on e.nuemp = p.idemp
+where p.importe > 30000
+group by e.nuemp;
+
+#13
+select pr.idproducto as 'Producto', pr.descripcion as 'Descripción', pr.precio as 'Precio', pr.existencias as 'Existencias', sum(pe.cantidad) as 'Cantidad'
+from productos pr
+inner join pedidos pe
+on pe.idfab = pr.idfab and pe.idproducto = pr.idproducto
+where sum(pe.cantidad) > (sum(pr.existencias) * 0.75)
+order by sum(pe.cantidad) asc
+group by pr.idproducto;
