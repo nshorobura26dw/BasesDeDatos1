@@ -248,13 +248,25 @@ where edad > 50 and nuemp in (select idemp
                                 group by idemp
                                 having sum(cantidad) < 20);
 
+#17
+update productos p1
+set p1.precio = (select p2.precio
+				from nuevaproductos p2
+				where p1.idfab = p2.idfab and p1.idproducto = p2.idproducto);
+
 #19
-update nuevaempleados
-set nominas = nominas + 100
-where nombre = 'Antonio Viguer';
+update nominas
+set importe = importe + 100
+where id_empleado in (select nuemp
+						from empleados
+                        where nombre = 'Antonio Viguer');
 
 #20
-delete from nuevaempleados
-where edad > 60 and trabajador in (select oficina
+delete from nominas
+where id_empleado in (select nuemp
+						from nuevaempleados
+                        where edad > 60 and trabajador in (select oficina
 								from oficinas
-                                where region = 'oeste');
+                                where region = 'oeste'));
+                                
+#
