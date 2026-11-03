@@ -268,5 +268,3 @@ where id_empleado in (select nuemp
                         where edad > 60 and trabajador in (select oficina
 								from oficinas
                                 where region = 'oeste'));
-                                
-#
