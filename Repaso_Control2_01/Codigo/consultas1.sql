@@ -29,3 +29,27 @@ group by e.CIF, e.nombre
 having count(l.ISBN) > 2;
 
 #5
+insert into prestamo (DNI, ISBN, numEjemplar, fechaPrestamo, fechaDevolucion)
+values ('11111111A',
+		(select ISBN
+        from libro
+        where titulo = 'Cien años de soledad'),
+        2,
+        '2026-10-29',
+        null
+);
+
+#6
+update ejemplar
+set estado = 'Deteriorado'
+where ISBN in (select ISBN
+					from libro
+                    where titulo = 'Cien años de soledad');
+
+#7
+delete from prestamo
+where ISBN in (select ISBN
+				from libro
+                where CIF in (select CIF
+								from editorial
+                                where nombre = 'Planeta'));

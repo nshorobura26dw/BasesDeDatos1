@@ -4,9 +4,9 @@
 -- Ejecución: mysql -u usuario -p < 1_biblioteca.sql
 -- =====================================================================
 
-DROP DATABASE IF EXISTS biblioteca;
-CREATE DATABASE biblioteca CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-USE biblioteca;
+DROP DATABASE IF EXISTS biblioteca2;
+CREATE DATABASE biblioteca2 CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE biblioteca2;
 
 -- ---------------------------------------------------------------------
 -- Tablas
